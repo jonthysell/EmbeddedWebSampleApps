@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CefTester"
+        xmlns:cef="clr-namespace:Xilium.CefGlue.WPF;assembly=Xilium.CefGlue.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="CefTester"
+        Height="800"
+        Width="1200">
+    <DockPanel>
+        <cef:WpfCefBrowser Name="cefBrowser"
+                           Address="https://browserbench.org/Speedometer3.0" />
+    </DockPanel>
 </Window>
