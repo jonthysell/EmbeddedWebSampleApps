@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CefTester", "CefTester\CefTester.csproj", "{6146F5C9-3E05-7DF6-283C-03734CCA33AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebView2Tester", "WebView2Tester\WebView2Tester.csproj", "{2F7CA974-0A74-F215-3AB8-DE4877E6591F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6146F5C9-3E05-7DF6-283C-03734CCA33AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6146F5C9-3E05-7DF6-283C-03734CCA33AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6146F5C9-3E05-7DF6-283C-03734CCA33AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6146F5C9-3E05-7DF6-283C-03734CCA33AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7CA974-0A74-F215-3AB8-DE4877E6591F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7CA974-0A74-F215-3AB8-DE4877E6591F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7CA974-0A74-F215-3AB8-DE4877E6591F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7CA974-0A74-F215-3AB8-DE4877E6591F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {416A91ED-4987-458F-88DF-15FF6BDBF791}
+	EndGlobalSection
+EndGlobal
