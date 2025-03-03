@@ -10,7 +10,7 @@ using System.Windows;
 using Xilium.CefGlue;
 using Xilium.CefGlue.Common;
 
-namespace CefTester;
+namespace EmbeddedWebSampleApps.CefTester;
 
 /// <summary>
 /// Interaction logic for App.xaml
@@ -25,7 +25,7 @@ public partial class App : Application
     private static void SetupCef()
     {
         // Set CefGlue's cache to a folder next to the exe if possible, otherwise put in temp folder
-        var cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) ?? Path.GetTempPath(), "CefTester.CefGlue");
+        var cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) ?? Path.GetTempPath(), "EmbeddedWebSampleApps.CefTester.CefGlue");
 
         var settings = new CefSettings()
         {

@@ -5,7 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 
-namespace WebView2Tester;
+namespace EmbeddedWebSampleApps.WebView2Tester;
 
 /// <summary>
 /// Interaction logic for App.xaml

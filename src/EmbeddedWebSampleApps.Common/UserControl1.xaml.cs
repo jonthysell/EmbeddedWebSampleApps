@@ -1,6 +1,3 @@
-﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,15 +9,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CefTester;
+namespace EmbeddedWebSampleApps.Common;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+/// Interaction logic for UserControl1.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class UserControl1 : UserControl
 {
-    public MainWindow()
+    public UserControl1()
     {
         InitializeComponent();
     }
 }
+

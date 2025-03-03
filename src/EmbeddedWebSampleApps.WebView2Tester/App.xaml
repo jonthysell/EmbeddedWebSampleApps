@@ -1,7 +1,7 @@
-﻿<Application x:Class="WebView2Tester.App"
+﻿<Application x:Class="EmbeddedWebSampleApps.WebView2Tester.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:WebView2Tester"
+             xmlns:local="clr-namespace:EmbeddedWebSampleApps.WebView2Tester"
              StartupUri="MainWindow.xaml">
     <Application.Resources />
 </Application>

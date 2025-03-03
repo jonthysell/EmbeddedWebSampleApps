@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CefTester", "CefTester\CefTester.csproj", "{6146F5C9-3E05-7DF6-283C-03734CCA33AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedWebSampleApps.CefTester", "EmbeddedWebSampleApps.CefTester\EmbeddedWebSampleApps.CefTester.csproj", "{6146F5C9-3E05-7DF6-283C-03734CCA33AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebView2Tester", "WebView2Tester\WebView2Tester.csproj", "{2F7CA974-0A74-F215-3AB8-DE4877E6591F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedWebSampleApps.WebView2Tester", "EmbeddedWebSampleApps.WebView2Tester\EmbeddedWebSampleApps.WebView2Tester.csproj", "{2F7CA974-0A74-F215-3AB8-DE4877E6591F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedWebSampleApps.Common", "EmbeddedWebSampleApps.Common\EmbeddedWebSampleApps.Common.csproj", "{B87AA510-4DE9-4C87-BBAB-DBB9B51EC43F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{2F7CA974-0A74-F215-3AB8-DE4877E6591F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F7CA974-0A74-F215-3AB8-DE4877E6591F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F7CA974-0A74-F215-3AB8-DE4877E6591F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B87AA510-4DE9-4C87-BBAB-DBB9B51EC43F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B87AA510-4DE9-4C87-BBAB-DBB9B51EC43F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B87AA510-4DE9-4C87-BBAB-DBB9B51EC43F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B87AA510-4DE9-4C87-BBAB-DBB9B51EC43F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

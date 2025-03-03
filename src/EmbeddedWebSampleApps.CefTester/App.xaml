@@ -1,7 +1,7 @@
-﻿<Application x:Class="CefTester.App"
+﻿<Application x:Class="EmbeddedWebSampleApps.CefTester.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CefTester"
+             xmlns:local="clr-namespace:EmbeddedWebSampleApps.CefTester"
              Startup="Application_Startup"
              StartupUri="MainWindow.xaml">
     <Application.Resources />

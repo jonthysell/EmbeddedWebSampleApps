@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="CefGlue.WPF" Version="120.6099.210" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\EmbeddedWebSampleApps.Common\EmbeddedWebSampleApps.Common.csproj" />
+    </ItemGroup>
+</Project>
