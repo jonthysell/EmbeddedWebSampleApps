@@ -3,6 +3,7 @@
 
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
@@ -21,41 +22,18 @@ public partial class App : Application
         SetupCef();
     }
 
-    private static string CefCachePath = Path.GetTempPath();
-
     private static void SetupCef()
     {
-        // Move the various chrome cache's out of the working directory
-        CefCachePath = Path.Combine(Path.GetTempPath(), "CefGlue_" + Guid.NewGuid().ToString().Replace("-", null));
-
-        AppDomain.CurrentDomain.ProcessExit += delegate { CleanupCef(); };
+        // Set CefGlue's cache to a folder next to the exe if possible, otherwise put in temp folder
+        var cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) ?? Path.GetTempPath(), "CefTester.CefGlue");
 
         var settings = new CefSettings()
         {
-            RootCachePath = CefCachePath,
-            CachePath = CefCachePath,
-
+            RootCachePath = cachePath,
+            CachePath = cachePath,
         };
 
         CefRuntimeLoader.Initialize(settings);
-    }
-
-    private static void CleanupCef()
-    {
-        CefRuntime.Shutdown(); // must shutdown cef to free cache files (so that cleanup is able to delete files)
-
-        try
-        {
-            var dirInfo = new DirectoryInfo(CefCachePath);
-            if (dirInfo.Exists)
-            {
-                dirInfo.Delete(true);
-            }
-        }
-        catch (Exception)
-        {
-            // ignore
-        }
     }
 }
 
