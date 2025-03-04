@@ -37,7 +37,39 @@ public partial class PerformanceControl : UserControl
 
     public static readonly DependencyProperty ProcessNameProperty =
       DependencyProperty.Register("ProcessName", typeof(string),
-        typeof(PerformanceControl), new PropertyMetadata(Process.GetCurrentProcess().ProcessName, OnProcessNameChanged));
+        typeof(PerformanceControl), new PropertyMetadata("", OnDependencyPropertyChanged));
+
+    public int ProcessId
+    {
+        get
+        {
+            return (int)GetValue(ProcessIdProperty);
+        }
+        set
+        {
+            SetValue(ProcessIdProperty, value);
+        }
+    }
+
+    public static readonly DependencyProperty ProcessIdProperty =
+      DependencyProperty.Register("ProcessId", typeof(int),
+        typeof(PerformanceControl), new PropertyMetadata(0, OnDependencyPropertyChanged));
+
+    public bool AggregateChildrenProcesses
+    {
+        get
+        {
+            return (bool)GetValue(AggregateChildrenProcessesProperty);
+        }
+        set
+        {
+            SetValue(AggregateChildrenProcessesProperty, value);
+        }
+    }
+
+    public static readonly DependencyProperty AggregateChildrenProcessesProperty =
+      DependencyProperty.Register("AggregateChildrenProcesses", typeof(bool),
+        typeof(PerformanceControl), new PropertyMetadata(true, OnDependencyPropertyChanged));
 
     private readonly List<PerformanceCounter> _cpuCounters = new List<PerformanceCounter>();
     private readonly List<PerformanceCounter> _ramCounters = new List<PerformanceCounter>();
@@ -55,7 +87,7 @@ public partial class PerformanceControl : UserControl
         ResetCounters();
     }
 
-    private static void OnProcessNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is PerformanceControl pc)
         {
@@ -71,28 +103,39 @@ public partial class PerformanceControl : UserControl
             _timer.Stop();
         }
 
-        _cpu = 0.0f;
-        _maxCpu = 0.0f;
-        _ram = 0.0f;
-        _maxRam = 0.0f;
-
         _cpuCounters.Clear();
         _ramCounters.Clear();
 
-        var processes = Process.GetProcessesByName(ProcessName);
+        string title = "Unknown Process";
 
-        foreach (var p in processes)
+        var process = ProcessId > 0 ? Process.GetProcessById(ProcessId)
+            : (!string.IsNullOrWhiteSpace(ProcessName) ? Process.GetProcessesByName(ProcessName).FirstOrDefault()
+            : Process.GetCurrentProcess());
+
+        if (process is not null)
         {
-            var cpuPC = p.GetPerformanceCounter("% Processor Time");
-            if (cpuPC is not null)
+            title = $"{process.ProcessName}({process.Id})";
+
+            var processes = new List<Process>() { process };
+
+            if (AggregateChildrenProcesses)
             {
-                _cpuCounters.Add(cpuPC);
+                processes.AddRange(process.GetChildProcesses(true));
             }
 
-            var ramPC = p.GetPerformanceCounter("Working Set");
-            if (ramPC is not null)
+            foreach (var p in processes)
             {
-                _ramCounters.Add(ramPC);
+                var cpuPC = p.GetPerformanceCounter("% Processor Time");
+                if (cpuPC is not null)
+                {
+                    _cpuCounters.Add(cpuPC);
+                }
+
+                var ramPC = p.GetPerformanceCounter("Working Set");
+                if (ramPC is not null)
+                {
+                    _ramCounters.Add(ramPC);
+                }
             }
         }
 
@@ -100,9 +143,17 @@ public partial class PerformanceControl : UserControl
         _timer.Interval = TimeSpan.FromMilliseconds(500);
         _timer.Tick += timer_Tick;
 
-        UpdateText();
+        _cpu = 0.0f;
+        _maxCpu = 0.0f;
+        _ram = 0.0f;
+        _maxRam = 0.0f;
 
-        _timer.Start();
+        UpdateText(title);
+    }
+
+    private void StartCounters()
+    {
+        _timer?.Start();
     }
 
     private void timer_Tick(object? sender, EventArgs e)
@@ -129,8 +180,13 @@ public partial class PerformanceControl : UserControl
         UpdateText();
     }
 
-    private void UpdateText()
+    private void UpdateText(string? title = null)
     {
+        if (title is not null)
+        {
+            appName.Text = title;
+        }
+
         appCpuMetric.Text = $"{_cpu:0.00}%";
         appPeakCpuMetric.Text = $"{_maxCpu:0.00}%";
 
@@ -141,6 +197,7 @@ public partial class PerformanceControl : UserControl
     private void Reset_Click(object sender, RoutedEventArgs e)
     {
         ResetCounters();
+        StartCounters();
     }
 }
 
