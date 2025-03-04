@@ -4,12 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EmbeddedWebSampleApps.WebView2Tester"
+        xmlns:common="clr-namespace:EmbeddedWebSampleApps.Common;assembly=EmbeddedWebSampleApps.Common"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Title="EmbeddedWebSampleApps.WebView2Tester"
         Height="800"
         Width="1200">
     <DockPanel>
+        <StackPanel DockPanel.Dock="Right">
+            <common:PerformanceControl />
+            <common:PerformanceControl ProcessName="msedgewebview2" />
+        </StackPanel>
         <wv2:WebView2 Name="webView"
                       Source="https://browserbench.org/Speedometer3.0" />
     </DockPanel>
