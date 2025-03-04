@@ -2,4 +2,7 @@
     <PropertyGroup>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="System.Management" Version="9.0.2" />
+    </ItemGroup>
 </Project>
