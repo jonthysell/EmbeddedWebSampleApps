@@ -7,7 +7,6 @@
         xmlns:common="clr-namespace:EmbeddedWebSampleApps.Common;assembly=EmbeddedWebSampleApps.Common"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
-        Title="WebView2Window"
         Height="480"
         Width="640">
     <Grid>

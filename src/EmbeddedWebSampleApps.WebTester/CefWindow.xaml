@@ -7,7 +7,6 @@
         xmlns:cef="clr-namespace:Xilium.CefGlue.WPF;assembly=Xilium.CefGlue.WPF"
         xmlns:common="clr-namespace:EmbeddedWebSampleApps.Common;assembly=EmbeddedWebSampleApps.Common"
         mc:Ignorable="d"
-        Title="CefWindow"
         Height="480"
         Width="640">
     <Grid>
