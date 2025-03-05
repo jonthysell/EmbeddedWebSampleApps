@@ -6,7 +6,7 @@ Sample apps to test the various ways web content is embedded in native desktop a
 
 ![CEF Tester Screenshot](./screenshots/CefTester.png)
 
-Simple .NET WPF app that loads [BrowserBench Speedometer 3.0](https://browserbench.org/Speedometer3.0) via the [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef/src).
+Simple .NET WPF app that loads [BrowserBench](https://browserbench.org/) via the [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef/src).
 
 ### Usage
 1. `dotnet run --project src\EmbeddedWebSampleApps.CefTester --release`
@@ -16,7 +16,7 @@ Simple .NET WPF app that loads [BrowserBench Speedometer 3.0](https://browserben
 
 ![WebView2 Tester Screenshot](./screenshots/WebView2Tester.png)
 
-Simple .NET WPF app that loads [BrowserBench Speedometer 3.0](https://browserbench.org/Speedometer3.0) via a [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
+Simple .NET WPF app that loads [BrowserBench](https://browserbench.org/) via a [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
 
 ### Usage
 1. `dotnet run --project src\EmbeddedWebSampleApps.WebView2Tester --release`

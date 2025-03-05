@@ -15,6 +15,6 @@
             <common:PerformanceControl />
         </StackPanel>
         <wv2:WebView2 Name="webView"
-                      Source="https://browserbench.org/Speedometer3.0" />
+                      Source="https://browserbench.org/" />
     </DockPanel>
 </Window>

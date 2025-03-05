@@ -15,6 +15,6 @@
             <common:PerformanceControl />
         </StackPanel>
         <cef:WpfCefBrowser Name="cefBrowser"
-                           Address="https://browserbench.org/Speedometer3.0" />
+                           Address="https://browserbench.org/" />
     </DockPanel>
 </Window>
