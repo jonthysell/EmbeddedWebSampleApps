@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <UseWPF>true</UseWPF>
+        <StartupObject>EmbeddedWebSampleApps.WebTester.Program</StartupObject>
+        <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="CefGlue.WPF" Version="120.6099.210" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\EmbeddedWebSampleApps.Common\EmbeddedWebSampleApps.Common.csproj" />
+    </ItemGroup>
+</Project>
