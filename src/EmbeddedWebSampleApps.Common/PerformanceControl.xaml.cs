@@ -71,20 +71,18 @@ public partial class PerformanceControl : UserControl
       DependencyProperty.Register("AggregateChildrenProcesses", typeof(bool),
         typeof(PerformanceControl), new PropertyMetadata(true, OnDependencyPropertyChanged));
 
-    private readonly List<PerformanceCounter> _cpuCounters = new List<PerformanceCounter>();
-    private readonly List<PerformanceCounter> _ramCounters = new List<PerformanceCounter>();
+    private ProcessMonitor? _processMonitor = null;
     private DispatcherTimer? _timer = null;
-
-    private float _cpu = 0.0f;
-    private float _maxCpu = 0.0f;
-    private float _ram = 0.0f;
-    private float _maxRam = 0.0f;
 
     public PerformanceControl()
     {
         InitializeComponent();
         appName.DataContext = this;
-        ResetCounters();
+
+        _timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
+        _timer.Interval = TimeSpan.FromMilliseconds(500);
+        _timer.Tick += timer_Tick;
+        _timer?.Start();
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -97,14 +95,11 @@ public partial class PerformanceControl : UserControl
 
     private void ResetCounters()
     {
-        if (_timer is not null)
+        if (_processMonitor is not null)
         {
-            _timer.Tick -= timer_Tick;
-            _timer.Stop();
+            _processMonitor?.Stop();
+            _processMonitor = null;
         }
-
-        _cpuCounters.Clear();
-        _ramCounters.Clear();
 
         string title = "Unknown Process";
 
@@ -114,69 +109,20 @@ public partial class PerformanceControl : UserControl
 
         if (process is not null)
         {
-            title = $"{process.ProcessName}({process.Id})";
-
-            var processes = new List<Process>() { process };
-
-            if (AggregateChildrenProcesses)
-            {
-                processes.AddRange(process.GetChildProcesses(true));
-            }
-
-            foreach (var p in processes)
-            {
-                var cpuPC = p.GetPerformanceCounter("% Processor Time");
-                if (cpuPC is not null)
-                {
-                    _cpuCounters.Add(cpuPC);
-                }
-
-                var ramPC = p.GetPerformanceCounter("Working Set");
-                if (ramPC is not null)
-                {
-                    _ramCounters.Add(ramPC);
-                }
-            }
+            _processMonitor = new ProcessMonitor(process, AggregateChildrenProcesses);
+            title = _processMonitor.ProcessTitle;
         }
-
-        _timer = new DispatcherTimer();
-        _timer.Interval = TimeSpan.FromMilliseconds(500);
-        _timer.Tick += timer_Tick;
-
-        _cpu = 0.0f;
-        _maxCpu = 0.0f;
-        _ram = 0.0f;
-        _maxRam = 0.0f;
 
         UpdateText(title);
     }
 
     private void StartCounters()
     {
-        _timer?.Start();
+        _processMonitor?.Start();
     }
 
     private void timer_Tick(object? sender, EventArgs e)
     {
-        var cpu = 0.0f;
-        foreach (var cpuPC in _cpuCounters)
-        {
-            cpu += cpuPC.NextValue() / Environment.ProcessorCount;
-        }
-
-        cpu = Math.Min(100.0f, cpu);
-
-        var ram = 0.0f;
-        foreach (var ramPC in _ramCounters)
-        {
-            ram += ramPC.NextValue() / 1024 / 1024;
-        }
-
-        _cpu = cpu;
-        _maxCpu = Math.Max(_maxCpu, cpu);
-        _ram = ram;
-        _maxRam = Math.Max(_maxRam, ram);
-
         UpdateText();
     }
 
@@ -187,11 +133,11 @@ public partial class PerformanceControl : UserControl
             appName.Text = title;
         }
 
-        appCpuMetric.Text = $"{_cpu:0.00}%";
-        appPeakCpuMetric.Text = $"{_maxCpu:0.00}%";
+        appCpuMetric.Text = $"{_processMonitor?.CurrentCpuUsage ?? 0:0.00}%";
+        appPeakCpuMetric.Text = $"{_processMonitor?.MaxCpuUsage ?? 0:0.00}%";
 
-        appRamMetric.Text = $"{_ram:0.0} MB";
-        appPeakRamMetric.Text = $"{_maxRam:0.0} MB";
+        appRamMetric.Text = $"{_processMonitor?.CurrentRamUsageMB ?? 0:0.0} MB";
+        appPeakRamMetric.Text = $"{_processMonitor?.MaxRamUsageMB ?? 0:0.0} MB";
     }
 
     private void Reset_Click(object sender, RoutedEventArgs e)
