@@ -13,6 +13,8 @@ internal static class Program
     [STAThread]
     public static int Main(string[] args)
     {
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
         if (!TryParseArgs(args, out var settings))
         {
             PrintUsage();
@@ -24,6 +26,11 @@ internal static class Program
         app.Run();
 
         return 0;
+    }
+
+    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        Console.Error.WriteLine($"Unhandled exception: {e.ExceptionObject}");
     }
 
     private static bool TryParseArgs(string[] args, out AppSettings settings)
