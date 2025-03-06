@@ -22,23 +22,29 @@ namespace EmbeddedWebSampleApps.WebTester;
 /// </summary>
 public partial class CefWindow : Window
 {
-    private readonly AppSettings _settings;
+    private readonly App _app;
 
-    public CefWindow(AppSettings settings)
+    public CefWindow(App app)
     {
-        _settings = settings;
+        _app = app;
 
         InitializeComponent();
     }
 
     private void WebHost_Loaded(object sender, RoutedEventArgs e)
     {
-        if (_settings.LogWebConsole)
+        Logger.LogLine(nameof(CefWindow), nameof(WebHost_Loaded));
+
+        if (_app.Settings.LogWebConsole)
         {
+            Logger.LogLine(nameof(CefWindow), $"Enable {nameof(_app.Settings.LogWebConsole)}");
             WebHost.ConsoleMessage += WebHost_ConsoleMessage;
         }
 
-        WebHost.Address = _settings.StartingUri.AbsoluteUri;
+        _app.TryEnablePerformanceLogging();
+
+        Logger.LogLine(nameof(CefWindow), $"WebHost.Address = \"{_app.Settings.StartingUri.AbsoluteUri}\"");
+        WebHost.Address = _app.Settings.StartingUri.AbsoluteUri;
     }
 
     private void WebHost_ConsoleMessage(object sender, ConsoleMessageEventArgs e)

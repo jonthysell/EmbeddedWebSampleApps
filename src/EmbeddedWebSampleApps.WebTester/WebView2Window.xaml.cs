@@ -23,25 +23,32 @@ namespace EmbeddedWebSampleApps.WebTester;
 /// </summary>
 public partial class WebView2Window : Window
 {
-    private readonly AppSettings _settings;
+    private readonly App _app;
 
-    public WebView2Window(AppSettings settings)
+    public WebView2Window(App app)
     {
-        _settings = settings;
+        _app = app;
 
         InitializeComponent();
     }
 
     private async void WebHost_Loaded(object sender, RoutedEventArgs e)
     {
+        Logger.LogLine(nameof(WebView2Window), nameof(WebHost_Loaded));
+
         await WebHost.EnsureCoreWebView2Async();
-        if (_settings.LogWebConsole)
+        if (_app.Settings.LogWebConsole)
         {
+            Logger.LogLine(nameof(WebView2Window), $"Enable {nameof(_app.Settings.LogWebConsole)}");
             var helper = WebHost.CoreWebView2.GetDevToolsProtocolHelper();
             helper.Console.MessageAdded += WebHost_ConsoleMessageAdded;
             await helper.Console.EnableAsync();
         }
-        WebHost.Source = _settings.StartingUri;
+
+        _app.TryEnablePerformanceLogging();
+
+        Logger.LogLine(nameof(WebView2Window), $"WebHost.Source = \"{_app.Settings.StartingUri}\"");
+        WebHost.Source = _app.Settings.StartingUri;
     }
 
     private void WebHost_ConsoleMessageAdded(object? sender, Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Console.MessageAddedEventArgs e)

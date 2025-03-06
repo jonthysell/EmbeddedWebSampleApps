@@ -30,6 +30,8 @@ public class ProcessMonitor
     private Task? _monitorTask = null;
     private CancellationTokenSource? _monitorCTS = null;
 
+    public event EventHandler<ProcessMonitorEventArgs>? ProcessMonitorEvent;
+
     public ProcessMonitor(Process process, bool includeChildren = false)
     {
         Process = process;
@@ -119,8 +121,22 @@ public class ProcessMonitor
             CurrentRamUsageMB = ram;
             MaxRamUsageMB = Math.Max(MaxRamUsageMB, ram);
 
+            ProcessMonitorEvent?.Invoke(this, new ProcessMonitorEventArgs(cpu, ram));
+
             await Task.Delay(100, cancellationToken);
         }
     }
 
+}
+
+public class ProcessMonitorEventArgs : EventArgs
+{
+    public readonly float CpuUsage;
+    public readonly float RamUsageMB;
+
+    public ProcessMonitorEventArgs(float cpuUsage, float ramUsageMB) : base()
+    {
+        CpuUsage = cpuUsage;
+        RamUsageMB = ramUsageMB;
+    }
 }

@@ -17,4 +17,5 @@ public class AppSettings
     public Uri StartingUri = new Uri("https://microsoft.com/");
     public Size WindowSize = new Size(640, 480);
     public bool LogWebConsole = false;
+    public bool LogPerformance = false;
 }
