@@ -67,6 +67,13 @@ internal static class Program
 
     private static void PrintUsage()
     {
-        Console.WriteLine("Usage:");
+        var defaultSettings = new AppSettings();
+        Console.WriteLine($"{AppInfo.Name}.exe [options]");
+        Console.WriteLine("Options:");
+        Console.WriteLine();
+        Console.WriteLine($"-?, --help            Display this help");
+        Console.WriteLine($"-h, --host [WV2|CEF]  Control to host web content (default: { defaultSettings.WebHost })");
+        Console.WriteLine($"-u, --uri  [uri]      URI to load (default: {defaultSettings.StartingUri})");
+        Console.WriteLine($"-s, --size [WxH]      Window size (default: {defaultSettings.WindowSize.Width:0}x{defaultSettings.WindowSize.Height:0})");
     }
 }

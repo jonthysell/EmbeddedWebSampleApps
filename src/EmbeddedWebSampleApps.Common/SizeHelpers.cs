@@ -22,7 +22,7 @@ public static class SizeHelpers
 
     public static Size Parse(string s)
     {
-        var split = s.Split('x');
+        var split = s.ToLower().Split('x');
         return new Size(double.Parse(split[0]), double.Parse(split[1]));
     }
 }

@@ -9,6 +9,7 @@ using System.Windows;
 
 using Xilium.CefGlue.Common;
 using Xilium.CefGlue;
+using EmbeddedWebSampleApps.Common;
 
 namespace EmbeddedWebSampleApps.WebTester;
 
@@ -30,7 +31,7 @@ public partial class App : Application
         if (Settings.WebHost == WebHost.CEF)
         {
             // Set CefGlue's cache to a folder next to the exe if possible, otherwise put in temp folder
-            var cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) ?? Path.GetTempPath(), "EmbeddedWebSampleApps.WebTester.CefGlue");
+            var cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) ?? Path.GetTempPath(), $"{AppInfo.Name}.exe.CefGlue");
 
             var settings = new CefSettings()
             {
@@ -49,7 +50,7 @@ public partial class App : Application
 
         if (window is not null)
         {
-            window.Title = $"WebTester [{ Settings.WebHost }] { Settings.StartingUri }";
+            window.Title = $"{AppInfo.Name} [{ Settings.WebHost }] { Settings.StartingUri }";
             window.Width = Settings.WindowSize.Width;
             window.Height = Settings.WindowSize.Height;
             window.Show();
