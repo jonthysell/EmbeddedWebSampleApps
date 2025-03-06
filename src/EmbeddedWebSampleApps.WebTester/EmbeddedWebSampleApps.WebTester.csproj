@@ -8,6 +8,7 @@
     <ItemGroup>
         <PackageReference Include="CefGlue.WPF" Version="120.6099.210" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+        <PackageReference Include="Microsoft.Web.WebView2.DevToolsProtocolExtension" Version="1.0.2901" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\EmbeddedWebSampleApps.Common\EmbeddedWebSampleApps.Common.csproj" />

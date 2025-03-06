@@ -36,16 +36,16 @@ internal static class Program
             {
                 switch (args[i].ToLower())
                 {
-                    case "-h":
-                    case "--host":
-                        settings.WebHost = ++i < args.Length && Enum.TryParse<WebHost>(args[i], out var webHost) ? webHost : throw new Exception($"Unable to parse argument \"{args[i]}\".");
+                    case "--web-host":
+                        settings.WebHost = ++i < args.Length && Enum.TryParse<WebHostType>(args[i], out var webHost) ? webHost : throw new Exception($"Unable to parse argument \"{args[i]}\".");
                         break;
-                    case "-u":
-                    case "--uri":
+                    case "--log-web-console":
+                        settings.LogWebConsole = ++i < args.Length && bool.TryParse(args[i], out var consoleLog) ? consoleLog : throw new Exception($"Unable to parse argument \"{args[i]}\".");
+                        break;
+                    case "--starting-uri":
                         settings.StartingUri = ++i < args.Length && Uri.TryCreate(args[i], UriKind.Absolute, out var uri) ? uri : throw new Exception($"Unable to parse argument \"{args[i]}\".");
                         break;
-                    case "-s":
-                    case "--size":
+                    case "--window-size":
                         settings.WindowSize = ++i < args.Length && SizeHelpers.TryParse(args[i], out var size) ? size : throw new Exception($"Unable to parse argument \"{args[i]}\".");
                         break;
                     case "-?":
@@ -71,9 +71,10 @@ internal static class Program
         Console.WriteLine($"{AppInfo.Name}.exe [options]");
         Console.WriteLine("Options:");
         Console.WriteLine();
-        Console.WriteLine($"-?, --help            Display this help");
-        Console.WriteLine($"-h, --host [WV2|CEF]  Control to host web content (default: { defaultSettings.WebHost })");
-        Console.WriteLine($"-u, --uri  [uri]      URI to load (default: {defaultSettings.StartingUri})");
-        Console.WriteLine($"-s, --size [WxH]      Window size (default: {defaultSettings.WindowSize.Width:0}x{defaultSettings.WindowSize.Height:0})");
+        Console.WriteLine($"--web-host [WV2|CEF]            Control to host web content (default: { defaultSettings.WebHost })");
+        Console.WriteLine($"--log-web-console [true|false]  Enable web console logging (default: {defaultSettings.LogWebConsole})");
+        Console.WriteLine($"--window-size [WxH]             Window size (default: {defaultSettings.WindowSize.Width:0}x{defaultSettings.WindowSize.Height:0})");
+        Console.WriteLine($"--starting-uri [uri]            Starting URI to load (default: {defaultSettings.StartingUri})");
+        Console.WriteLine($"-?, --help                      Display this help");
     }
 }

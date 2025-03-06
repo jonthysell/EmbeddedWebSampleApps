@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using EmbeddedWebSampleApps.Common;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Xilium.CefGlue.Common.Events;
+
 namespace EmbeddedWebSampleApps.WebTester;
 
 /// <summary>
@@ -19,9 +22,27 @@ namespace EmbeddedWebSampleApps.WebTester;
 /// </summary>
 public partial class CefWindow : Window
 {
-    public CefWindow(Uri startingUri)
+    private readonly AppSettings _settings;
+
+    public CefWindow(AppSettings settings)
     {
+        _settings = settings;
+
         InitializeComponent();
-        cefBrowser.Address = startingUri.AbsoluteUri;
+    }
+
+    private void WebHost_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (_settings.LogWebConsole)
+        {
+            WebHost.ConsoleMessage += WebHost_ConsoleMessage;
+        }
+
+        WebHost.Address = _settings.StartingUri.AbsoluteUri;
+    }
+
+    private void WebHost_ConsoleMessage(object sender, ConsoleMessageEventArgs e)
+    {
+        Logger.LogLine($"console.log() [{e.Level.ToString().ToLowerInvariant()}]", e.Message);
     }
 }

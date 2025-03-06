@@ -28,7 +28,7 @@ public partial class App : Application
     private void Application_Startup(object sender, StartupEventArgs e)
     {
         Window? window = null;
-        if (Settings.WebHost == WebHost.CEF)
+        if (Settings.WebHost == WebHostType.CEF)
         {
             // Set CefGlue's cache to a folder next to the exe if possible, otherwise put in temp folder
             var cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) ?? Path.GetTempPath(), $"{AppInfo.Name}.exe.CefGlue");
@@ -41,11 +41,11 @@ public partial class App : Application
 
             CefRuntimeLoader.Initialize(settings);
 
-            window = new CefWindow(Settings.StartingUri);
+            window = new CefWindow(Settings);
         }
-        else if (Settings.WebHost == WebHost.WV2)
+        else if (Settings.WebHost == WebHostType.WV2)
         {
-            window = new WebView2Window(Settings.StartingUri);
+            window = new WebView2Window(Settings);
         }
 
         if (window is not null)

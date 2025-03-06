@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace EmbeddedWebSampleApps.WebTester;
 
-public enum WebHost
+public enum WebHostType
 {
     CEF,
     WV2,
@@ -13,7 +13,8 @@ public enum WebHost
 
 public class AppSettings
 {
-    public WebHost WebHost = WebHost.WV2;
+    public WebHostType WebHost = WebHostType.WV2;
     public Uri StartingUri = new Uri("https://microsoft.com/");
     public Size WindowSize = new Size(640, 480);
+    public bool LogWebConsole = false;
 }

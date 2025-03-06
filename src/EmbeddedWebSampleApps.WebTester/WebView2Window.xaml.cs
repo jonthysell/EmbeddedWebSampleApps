@@ -12,6 +12,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Microsoft.Web.WebView2.Core.DevToolsProtocolExtension;
+
+using EmbeddedWebSampleApps.Common;
+
 namespace EmbeddedWebSampleApps.WebTester;
 
 /// <summary>
@@ -19,9 +23,29 @@ namespace EmbeddedWebSampleApps.WebTester;
 /// </summary>
 public partial class WebView2Window : Window
 {
-    public WebView2Window(Uri startingUri)
+    private readonly AppSettings _settings;
+
+    public WebView2Window(AppSettings settings)
     {
+        _settings = settings;
+
         InitializeComponent();
-        webView2.Source = startingUri;
+    }
+
+    private async void WebHost_Loaded(object sender, RoutedEventArgs e)
+    {
+        await WebHost.EnsureCoreWebView2Async();
+        if (_settings.LogWebConsole)
+        {
+            var helper = WebHost.CoreWebView2.GetDevToolsProtocolHelper();
+            helper.Console.MessageAdded += WebHost_ConsoleMessageAdded;
+            await helper.Console.EnableAsync();
+        }
+        WebHost.Source = _settings.StartingUri;
+    }
+
+    private void WebHost_ConsoleMessageAdded(object? sender, Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Console.MessageAddedEventArgs e)
+    {
+        Logger.LogLine($"console.log() [{e.Message.Level.ToLowerInvariant()}]", e.Message.Text);
     }
 }
