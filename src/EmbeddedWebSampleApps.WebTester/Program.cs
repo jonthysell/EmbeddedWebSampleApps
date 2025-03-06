@@ -44,10 +44,10 @@ internal static class Program
                 switch (args[i].ToLower())
                 {
                     case "--log-performance":
-                        settings.LogPerformance = ++i < args.Length && bool.TryParse(args[i], out var performanceLog) ? performanceLog : throw new Exception($"Unable to parse argument \"{args[i]}\".");
+                        settings.LogPerformance = true;
                         break;
                     case "--log-web-console":
-                        settings.LogWebConsole = ++i < args.Length && bool.TryParse(args[i], out var consoleLog) ? consoleLog : throw new Exception($"Unable to parse argument \"{args[i]}\".");
+                        settings.LogWebConsole = true;
                         break;
                     case "--starting-uri":
                         settings.StartingUri = ++i < args.Length && Uri.TryCreate(args[i], UriKind.Absolute, out var uri) ? uri : throw new Exception($"Unable to parse argument \"{args[i]}\".");
@@ -81,11 +81,11 @@ internal static class Program
         Console.WriteLine($"{AppInfo.Name}.exe [options]");
         Console.WriteLine("Options:");
         Console.WriteLine();
-        Console.WriteLine($"--log-performance [true|false]  Enable performance logging (default: {defaultSettings.LogPerformance})");
-        Console.WriteLine($"--log-web-console [true|false]  Enable web console logging (default: {defaultSettings.LogWebConsole})");
-        Console.WriteLine($"--starting-uri [uri]            Starting URI to load (default: {defaultSettings.StartingUri})");
-        Console.WriteLine($"--web-host [WV2|CEF]            Control to host web content (default: {defaultSettings.WebHost})");
-        Console.WriteLine($"--window-size [WxH]             Window size (default: {defaultSettings.WindowSize.Width:0}x{defaultSettings.WindowSize.Height:0})");
-        Console.WriteLine($"-?, --help                      Display this help");
+        Console.WriteLine($"--log-performance     Enable performance logging (default: {defaultSettings.LogPerformance})");
+        Console.WriteLine($"--log-web-console     Enable web console logging (default: {defaultSettings.LogWebConsole})");
+        Console.WriteLine($"--starting-uri [uri]  Starting URI to load (default: {defaultSettings.StartingUri})");
+        Console.WriteLine($"--web-host [WV2|CEF]  Control to host web content (default: {defaultSettings.WebHost})");
+        Console.WriteLine($"--window-size [WxH]   Window size (default: {defaultSettings.WindowSize.Width:0}x{defaultSettings.WindowSize.Height:0})");
+        Console.WriteLine($"-?, --help            Display this help");
     }
 }
