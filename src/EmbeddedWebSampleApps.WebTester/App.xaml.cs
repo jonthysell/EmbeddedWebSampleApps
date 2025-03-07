@@ -22,13 +22,26 @@ public partial class App : Application
 
     private ProcessMonitor? _processMonitor = null;
 
+    private StreamWriter? _logFile = null;
+
     public App(AppSettings settings) : base()
     {
         Settings = settings;
+        if (!string.IsNullOrWhiteSpace(settings.LogFile))
+        {
+            _logFile = new StreamWriter(settings.LogFile);
+            Logger.LogEvent += Application_WriteToLogFile_LogEvent;
+        }
+    }
+
+    private void Application_WriteToLogFile_LogEvent(object? sender, LogEventArgs e)
+    {
+        _logFile?.WriteLine(e.ToString());
     }
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
+        Logger.LogLine(nameof(App), nameof(Application_Startup));
         Window? window = null;
         if (Settings.WebHost == WebHostType.CEF)
         {
@@ -61,6 +74,12 @@ public partial class App : Application
         }
     }
 
+    private void Application_Exit(object sender, ExitEventArgs e)
+    {
+        _logFile?.Flush();
+        _logFile?.Close();
+    }
+
     internal void TryEnablePerformanceLogging()
     {
         if (Settings.LogPerformance)
@@ -89,6 +108,4 @@ public partial class App : Application
             _processMonitor = null;
         }
     }
-
-    
 }

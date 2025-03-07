@@ -19,4 +19,5 @@ public class AppSettings
     public bool LogWebConsole = false;
     public bool LogPerformance = false;
     public string PostLoadJs = "";
+    public string LogFile = "";
 }

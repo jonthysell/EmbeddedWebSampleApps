@@ -43,6 +43,9 @@ internal static class Program
             {
                 switch (args[i].ToLower())
                 {
+                    case "--log-file":
+                        settings.LogFile = ++i < args.Length ? args[i] : throw new Exception($"Missing argument after {args[i - 1].ToLower()}.");
+                        break;
                     case "--log-performance":
                         settings.LogPerformance = true;
                         break;
@@ -84,9 +87,10 @@ internal static class Program
         Console.WriteLine($"{AppInfo.Name}.exe [options]");
         Console.WriteLine("Options:");
         Console.WriteLine();
+        Console.WriteLine($"--log-file [file]     Log output to the given file (default: none)");
         Console.WriteLine($"--log-performance     Enable performance logging (default: {defaultSettings.LogPerformance})");
         Console.WriteLine($"--log-web-console     Enable web console logging (default: {defaultSettings.LogWebConsole})");
-        Console.WriteLine($"--post-load-js [file] Inject the given JS file after the Starting URI has loaded (default: {defaultSettings.PostLoadJs})");
+        Console.WriteLine($"--post-load-js [file] Inject the given JS file after the Starting URI has loaded (default: none)");
         Console.WriteLine($"--starting-uri [uri]  Starting URI to load (default: {defaultSettings.StartingUri})");
         Console.WriteLine($"--web-host [WV2|CEF]  Control to host web content (default: {defaultSettings.WebHost})");
         Console.WriteLine($"--window-size [WxH]   Window size (default: {defaultSettings.WindowSize.Width:0}x{defaultSettings.WindowSize.Height:0})");
