@@ -81,7 +81,7 @@ public partial class WebView2Window : Window
     {
         Logger.LogLine(nameof(WebView2Window), nameof(WebHost_CoreWebView2NavigationCompleted));
 
-        if (!string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
+        if (e.IsSuccess && !string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
         {
             if (File.Exists(_app.Settings.PostLoadJs))
             {

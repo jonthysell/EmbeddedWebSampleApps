@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using EmbeddedWebSampleApps.Common;
-using Microsoft.Web.WebView2.Core.DevToolsProtocolExtension;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,9 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
 using Xilium.CefGlue;
 using Xilium.CefGlue.Common.Events;
-using static Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Console;
+
+using EmbeddedWebSampleApps.Common;
 
 namespace EmbeddedWebSampleApps.WebTester;
 
@@ -33,7 +34,7 @@ public partial class CefWindow : Window
         InitializeComponent();
     }
 
-    private async void WebHost_Loaded(object sender, RoutedEventArgs e)
+    private void WebHost_Loaded(object sender, RoutedEventArgs e)
     {
         Logger.LogLine(nameof(CefWindow), nameof(WebHost_Loaded));
     }
@@ -50,8 +51,27 @@ public partial class CefWindow : Window
 
         _app.TryEnablePerformanceLogging();
 
+        WebHost.LoadEnd += WebHost_LoadEnd;
+
         Logger.LogLine(nameof(CefWindow), $"WebHost.Address = \"{_app.Settings.StartingUri.AbsoluteUri}\"");
         WebHost.Address = _app.Settings.StartingUri.AbsoluteUri;
+    }
+
+    private void WebHost_LoadEnd(object sender, LoadEndEventArgs e)
+    {
+        Logger.LogLine(nameof(CefWindow), nameof(WebHost_LoadEnd));
+
+        if (e.HttpStatusCode == 200 && !string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
+        {
+            if (File.Exists(_app.Settings.PostLoadJs))
+            {
+                Logger.LogLine(nameof(CefWindow), $"Loading \"{_app.Settings.PostLoadJs}\"");
+                var js = File.ReadAllText(_app.Settings.PostLoadJs);
+                WebHost.ExecuteJavaScript(js);
+            }
+        }
+
+        WebHost.LoadEnd -= WebHost_LoadEnd;
     }
 
     private void WebHost_ConsoleMessage(object sender, ConsoleMessageEventArgs e)
