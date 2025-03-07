@@ -41,9 +41,15 @@ public sealed class Logger
         Trace.WriteLine(e.ToString());
     }
 
-    public static void LogLine (string source, string message)
+    public static void LogLine(string source, string message)
     {
         _logger._logEvent?.Invoke(_logger, new LogEventArgs(DateTime.Now, source, message));
+    }
+
+    public static void Close()
+    {
+        Console.Out.Flush();
+        Trace.Flush();
     }
 }
 

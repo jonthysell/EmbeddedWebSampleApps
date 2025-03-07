@@ -17,6 +17,10 @@ public class WebTesterNativeAPI
     public void ExitApp()
     {
         Logger.LogLine(nameof(WebTesterNativeAPI), nameof(ExitApp));
-        _app.Dispatcher.Invoke(_app.Shutdown);
+        _app.Dispatcher.Invoke(() =>
+        {
+            Logger.Close();
+            _app.MainWindow.Close();
+        });
     }
 }
