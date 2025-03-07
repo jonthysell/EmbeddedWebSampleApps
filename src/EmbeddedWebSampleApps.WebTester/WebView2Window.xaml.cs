@@ -81,6 +81,10 @@ public partial class WebView2Window : Window
     {
         Logger.LogLine(nameof(WebView2Window), nameof(WebHost_CoreWebView2NavigationCompleted));
 
+        WebHost.CoreWebView2.AddHostObjectToScript(nameof(WebTesterNativeAPI), new WebTesterNativeAPI(_app));
+
+        await WebHost.ExecuteScriptAsync($"const {nameof(WebTesterNativeAPI)} = window.chrome.webview.hostObjects.{nameof(WebTesterNativeAPI)};");
+
         if (e.IsSuccess && !string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
         {
             if (File.Exists(_app.Settings.PostLoadJs))

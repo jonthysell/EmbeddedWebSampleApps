@@ -89,4 +89,6 @@ public partial class App : Application
             _processMonitor = null;
         }
     }
+
+    
 }

@@ -61,6 +61,10 @@ public partial class CefWindow : Window
     {
         Logger.LogLine(nameof(CefWindow), nameof(WebHost_LoadEnd));
 
+        WebHost.RegisterJavascriptObject(new WebTesterNativeAPI(_app), nameof(WebTesterNativeAPI));
+
+        WebHost.ExecuteJavaScript($"const {nameof(WebTesterNativeAPI)} = window.{nameof(WebTesterNativeAPI)};");
+
         if (e.HttpStatusCode == 200 && !string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
         {
             if (File.Exists(_app.Settings.PostLoadJs))
