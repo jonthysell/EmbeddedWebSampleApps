@@ -18,4 +18,5 @@ public class AppSettings
     public Size WindowSize = new Size(640, 480);
     public bool LogWebConsole = false;
     public bool LogPerformance = false;
+    public string PostLoadJs = "";
 }

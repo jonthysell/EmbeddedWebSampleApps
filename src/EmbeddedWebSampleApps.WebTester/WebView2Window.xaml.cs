@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -70,7 +71,24 @@ public partial class WebView2Window : Window
 
         _app.TryEnablePerformanceLogging();
 
+        WebHost.CoreWebView2.NavigationCompleted += WebHost_CoreWebView2NavigationCompleted;
+
         Logger.LogLine(nameof(WebView2Window), $"WebHost.Source = \"{_app.Settings.StartingUri}\"");
         WebHost.Source = _app.Settings.StartingUri;
+    }
+
+    private async void WebHost_CoreWebView2NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
+    {
+        Logger.LogLine(nameof(WebView2Window), nameof(WebHost_CoreWebView2NavigationCompleted));
+
+        if (!string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
+        {
+            if (File.Exists(_app.Settings.PostLoadJs))
+            {
+                Logger.LogLine(nameof(WebView2Window), $"Loading \"{_app.Settings.PostLoadJs}\"");
+                var js = File.ReadAllText(_app.Settings.PostLoadJs);
+                await WebHost.ExecuteScriptAsync(js);
+            }
+        }
     }
 }

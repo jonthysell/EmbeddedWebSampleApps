@@ -49,6 +49,9 @@ internal static class Program
                     case "--log-web-console":
                         settings.LogWebConsole = true;
                         break;
+                    case "--post-load-js":
+                        settings.PostLoadJs = ++i < args.Length ? args[i] : throw new Exception($"Missing argument after {args[i-1].ToLower()}.");
+                        break;
                     case "--starting-uri":
                         settings.StartingUri = ++i < args.Length && Uri.TryCreate(args[i], UriKind.Absolute, out var uri) ? uri : throw new Exception($"Unable to parse argument \"{args[i]}\".");
                         break;
@@ -83,6 +86,7 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine($"--log-performance     Enable performance logging (default: {defaultSettings.LogPerformance})");
         Console.WriteLine($"--log-web-console     Enable web console logging (default: {defaultSettings.LogWebConsole})");
+        Console.WriteLine($"--post-load-js [file] Inject the given JS file after the Starting URI has loaded (default: {defaultSettings.PostLoadJs})");
         Console.WriteLine($"--starting-uri [uri]  Starting URI to load (default: {defaultSettings.StartingUri})");
         Console.WriteLine($"--web-host [WV2|CEF]  Control to host web content (default: {defaultSettings.WebHost})");
         Console.WriteLine($"--window-size [WxH]   Window size (default: {defaultSettings.WindowSize.Width:0}x{defaultSettings.WindowSize.Height:0})");
