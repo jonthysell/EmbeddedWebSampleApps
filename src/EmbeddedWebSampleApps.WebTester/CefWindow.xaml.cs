@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using EmbeddedWebSampleApps.Common;
+using Microsoft.Web.WebView2.Core.DevToolsProtocolExtension;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,8 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Xilium.CefGlue;
 using Xilium.CefGlue.Common.Events;
+using static Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Console;
 
 namespace EmbeddedWebSampleApps.WebTester;
 
@@ -31,9 +33,14 @@ public partial class CefWindow : Window
         InitializeComponent();
     }
 
-    private void WebHost_Loaded(object sender, RoutedEventArgs e)
+    private async void WebHost_Loaded(object sender, RoutedEventArgs e)
     {
         Logger.LogLine(nameof(CefWindow), nameof(WebHost_Loaded));
+    }
+
+    private void WebHost_BrowserInitialized()
+    {
+        Logger.LogLine(nameof(CefWindow), nameof(WebHost_BrowserInitialized));
 
         if (_app.Settings.LogWebConsole)
         {
@@ -49,6 +56,22 @@ public partial class CefWindow : Window
 
     private void WebHost_ConsoleMessage(object sender, ConsoleMessageEventArgs e)
     {
-        Logger.LogLine($"console.log() [{e.Level.ToString().ToLowerInvariant()}]", e.Message);
+        Logger.LogLine("WebConsole", $"console.{CefLogSeverityToConsoleMethod(e.Level)}(): {e.Message}");
+    }
+
+    private static string CefLogSeverityToConsoleMethod(CefLogSeverity cls)
+    {
+        switch (cls)
+        {
+            case CefLogSeverity.Warning:
+                return "warn";
+            case CefLogSeverity.Error:
+                return "error";
+            case CefLogSeverity.Verbose:
+                return "debug";
+            case CefLogSeverity.Info:
+            default:
+                return "log";
+        }
     }
 }

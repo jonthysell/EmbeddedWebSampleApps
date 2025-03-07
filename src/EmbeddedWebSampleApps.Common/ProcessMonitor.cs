@@ -10,7 +10,7 @@ namespace EmbeddedWebSampleApps.Common;
 
 public class ProcessMonitor
 {
-    public string ProcessTitle => $"{Process.ProcessName}({Process.Id})";
+    public string ProcessTitle => string.Join('\n', ProcessTitles);
 
     public readonly Process Process;
 
@@ -23,6 +23,8 @@ public class ProcessMonitor
     public float CurrentRamUsageMB { get; private set; } = 0.0f;
 
     public float MaxRamUsageMB { get; private set; } = 0.0f;
+
+    public readonly IReadOnlyList<string> ProcessTitles;
 
     private readonly List<PerformanceCounter> _cpuCounters;
     private readonly List<PerformanceCounter> _ramCounters;
@@ -40,6 +42,8 @@ public class ProcessMonitor
         _cpuCounters = new List<PerformanceCounter>();
         _ramCounters = new List<PerformanceCounter>();
 
+        var processTitles = new List<string>();
+
         var processes = new List<Process>() { process };
 
         if (includeChildren)
@@ -49,6 +53,8 @@ public class ProcessMonitor
 
         foreach (var p in processes)
         {
+            processTitles.Add($"{p.ProcessName}({p.Id})");
+
             var cpuPC = p.GetPerformanceCounter("% Processor Time");
             if (cpuPC is not null)
             {
@@ -61,6 +67,8 @@ public class ProcessMonitor
                 _ramCounters.Add(ramPC);
             }
         }
+
+        ProcessTitles = processTitles;
     }
 
     public void Start()

@@ -10,6 +10,6 @@
         Height="480"
         Width="640">
     <Grid>
-        <cef:WpfCefBrowser Name="WebHost" Loaded="WebHost_Loaded" />
+        <cef:WpfCefBrowser Name="WebHost" Loaded="WebHost_Loaded" BrowserInitialized="WebHost_BrowserInitialized" />
     </Grid>
 </Window>

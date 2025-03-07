@@ -10,6 +10,6 @@
         Height="480"
         Width="640">
     <Grid>
-        <wv2:WebView2 Name="WebHost" Loaded="WebHost_Loaded" />
+        <wv2:WebView2 Name="WebHost" Loaded="WebHost_Loaded" CoreWebView2InitializationCompleted="WebHost_CoreWebView2InitializationCompleted" />
     </Grid>
 </Window>

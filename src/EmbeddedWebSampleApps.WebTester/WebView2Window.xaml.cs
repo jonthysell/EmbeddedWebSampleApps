@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Core.DevToolsProtocolExtension;
 
 using EmbeddedWebSampleApps.Common;
@@ -37,6 +38,28 @@ public partial class WebView2Window : Window
         Logger.LogLine(nameof(WebView2Window), nameof(WebHost_Loaded));
 
         await WebHost.EnsureCoreWebView2Async();
+    }
+
+    private void WebHost_ConsoleMessageAdded(object? sender, Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Console.MessageAddedEventArgs e)
+    {
+        Logger.LogLine("WebConsole", $"console.{ConsoleMessageLevelToConsoleMethod(e.Message.Level)}(): {e.Message.Text}");
+    }
+
+    private static string ConsoleMessageLevelToConsoleMethod(string level)
+    {
+        switch(level)
+        {
+            case "warning":
+                return "warn";
+            default:
+                return level;
+        }
+    }
+
+    private async void WebHost_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+    {
+        Logger.LogLine(nameof(WebView2Window), nameof(WebHost_CoreWebView2InitializationCompleted));
+
         if (_app.Settings.LogWebConsole)
         {
             Logger.LogLine(nameof(WebView2Window), $"Enable {nameof(_app.Settings.LogWebConsole)}");
@@ -49,10 +72,5 @@ public partial class WebView2Window : Window
 
         Logger.LogLine(nameof(WebView2Window), $"WebHost.Source = \"{_app.Settings.StartingUri}\"");
         WebHost.Source = _app.Settings.StartingUri;
-    }
-
-    private void WebHost_ConsoleMessageAdded(object? sender, Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Console.MessageAddedEventArgs e)
-    {
-        Logger.LogLine($"console.log() [{e.Message.Level.ToLowerInvariant()}]", e.Message.Text);
     }
 }
