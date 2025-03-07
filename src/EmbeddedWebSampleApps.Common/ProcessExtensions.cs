@@ -11,17 +11,16 @@ namespace EmbeddedWebSampleApps.Common;
 public static class ProcessExtensions
 {
     // Adapted from https://stackoverflow.com/a/38614443
-    public static IList<Process> GetChildProcesses(this Process process, bool recursive = false)
+    public static IEnumerable<Process> GetChildProcesses(this Process process, bool recursive = false)
     {
         var children = new ManagementObjectSearcher(
                 $"Select * From Win32_Process Where ParentProcessID={process.Id}")
             .Get()
             .Cast<ManagementObject>()
             .Select(mo =>
-                Process.GetProcessById(Convert.ToInt32(mo["ProcessID"])))
-            .ToList();
+                Process.GetProcessById(Convert.ToInt32(mo["ProcessID"])));
 
-        return recursive ? children.Union(children.Select(c => c.GetChildProcesses(recursive)).SelectMany(x => x)).ToList() : children;
+        return recursive ? children.Union(children.Select(c => c.GetChildProcesses(recursive)).SelectMany(x => x)) : children;
     }
 
     public static PerformanceCounter? GetPerformanceCounter(this Process process, string processCounterName = "% Processor Time")

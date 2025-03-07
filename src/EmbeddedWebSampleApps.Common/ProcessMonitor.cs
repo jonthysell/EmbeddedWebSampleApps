@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography.X509Certificates;
 
 namespace EmbeddedWebSampleApps.Common;
 
 public class ProcessMonitor
 {
-    public string ProcessTitle => string.Join('\n', ProcessTitles);
+    public string ProcessTitle => $"{Process.ProcessName}({Process.Id})";
 
     public readonly Process Process;
 
@@ -24,10 +26,8 @@ public class ProcessMonitor
 
     public float MaxRamUsageMB { get; private set; } = 0.0f;
 
-    public readonly IReadOnlyList<string> ProcessTitles;
+    private readonly Dictionary<int, PerformanceCounterValue> _counters = new Dictionary<int, PerformanceCounterValue>();
 
-    private readonly List<PerformanceCounter> _cpuCounters;
-    private readonly List<PerformanceCounter> _ramCounters;
 
     private Task? _monitorTask = null;
     private CancellationTokenSource? _monitorCTS = null;
@@ -39,36 +39,39 @@ public class ProcessMonitor
         Process = process;
         IncludeChildren = includeChildren;
 
-        _cpuCounters = new List<PerformanceCounter>();
-        _ramCounters = new List<PerformanceCounter>();
+        RefreshPerformanceCounters();
+    }
 
-        var processTitles = new List<string>();
+    private void RefreshPerformanceCounters()
+    {
+        var processes = Process.GetChildProcesses(true).Prepend(Process).ToList();
+        int[] newPids = new int[processes.Count];
 
-        var processes = new List<Process>() { process };
-
-        if (includeChildren)
+        for (int i = 0; i < processes.Count; i++)
         {
-            processes.AddRange(process.GetChildProcesses(true));
+            if (_counters.TryGetValue(processes[i].Id, out var counterValue))
+            {
+                // Counter already exists
+                var instanceName = processes[i].GetInstanceName();
+                if (instanceName != counterValue.InstanceName)
+                {
+                    // But the instance was renamed, so re-create it
+                    _counters[processes[i].Id] = new PerformanceCounterValue(instanceName);
+                }
+            }
+            else
+            {
+                // Counter doesn't exist yet
+                _counters[processes[i].Id] = new PerformanceCounterValue(processes[i].GetInstanceName());
+            }
+            newPids[i] = processes[i].Id;
         }
 
-        foreach (var p in processes)
+        // Clear out old processes that aren't in the new list
+        foreach (var oldPid in _counters.Keys.Where(counterPid => !newPids.Contains(counterPid)))
         {
-            processTitles.Add($"{p.ProcessName}({p.Id})");
-
-            var cpuPC = p.GetPerformanceCounter("% Processor Time");
-            if (cpuPC is not null)
-            {
-                _cpuCounters.Add(cpuPC);
-            }
-
-            var ramPC = p.GetPerformanceCounter("Working Set");
-            if (ramPC is not null)
-            {
-                _ramCounters.Add(ramPC);
-            }
+            _counters.Remove(oldPid);
         }
-
-        ProcessTitles = processTitles;
     }
 
     public void Start()
@@ -108,30 +111,51 @@ public class ProcessMonitor
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var cpu = 0.0f;
-            foreach (var cpuPC in _cpuCounters)
+            try
             {
-                cpu += cpuPC.NextValue();
+                RefreshPerformanceCounters();
+
+                var cpu = 0.0f;
+                var ram = 0.0f;
+                foreach (var pcv in _counters.Values)
+                {
+                    cpu += pcv.CpuCounter.NextValue();
+                    ram += pcv.RamCounter.NextValue();
+                }
+
+                cpu = Math.Min(100.0f, cpu / Environment.ProcessorCount);
+                ram = ram / 1024 / 1024;
+
+                CurrentCpuUsage = cpu;
+                MaxCpuUsage = Math.Max(MaxCpuUsage, cpu);
+                CurrentRamUsageMB = ram;
+                MaxRamUsageMB = Math.Max(MaxRamUsageMB, ram);
             }
+            catch { }
 
-            cpu = Math.Min(100.0f, cpu / Environment.ProcessorCount);
+            ProcessMonitorEvent?.Invoke(this, new ProcessMonitorEventArgs(CurrentCpuUsage, MaxRamUsageMB));
 
-            var ram = 0.0f;
-            foreach (var ramPC in _ramCounters)
-            {
-                ram += ramPC.NextValue();
-            }
+            await Task.Delay(500, cancellationToken);
+        }
+    }
 
-            ram = ram / 1024 / 1024;
+    private class PerformanceCounterValue
+    {
+        public readonly string InstanceName;
+        public readonly PerformanceCounter CpuCounter;
+        public readonly PerformanceCounter RamCounter;
 
-            CurrentCpuUsage = cpu;
-            MaxCpuUsage = Math.Max(MaxCpuUsage, cpu);
-            CurrentRamUsageMB = ram;
-            MaxRamUsageMB = Math.Max(MaxRamUsageMB, ram);
+        public PerformanceCounterValue(string instanceName)
+        {
+            InstanceName = instanceName;
+            CpuCounter = new PerformanceCounter("Process", "% Processor Time", instanceName);
+            RamCounter = new PerformanceCounter("Process", "Working Set", instanceName);
+        }
 
-            ProcessMonitorEvent?.Invoke(this, new ProcessMonitorEventArgs(cpu, ram));
 
-            await Task.Delay(100, cancellationToken);
+        public override string ToString()
+        {
+            return InstanceName;
         }
     }
 
