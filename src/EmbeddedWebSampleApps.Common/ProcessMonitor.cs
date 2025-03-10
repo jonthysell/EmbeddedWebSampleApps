@@ -82,13 +82,20 @@ public class ProcessMonitor
         }
 
         _monitorCTS = new CancellationTokenSource();
-        _monitorTask = Task.Run(async () => await MonitorAsync(_monitorCTS.Token));
+        _monitorTask = Task.Run(async () => await MonitorAsync(_monitorCTS.Token), _monitorCTS.Token);
     }
 
     public void Stop()
     {
-        _monitorCTS?.Cancel();
-        _monitorTask?.Wait();
+        if (_monitorCTS is not null)
+        {
+            _monitorCTS.Cancel();
+            try
+            {
+                _monitorTask?.Wait(_monitorCTS.Token);
+            }
+            catch (OperationCanceledException) { }
+        }
 
         _monitorCTS = null;
         _monitorTask = null;

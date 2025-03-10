@@ -49,8 +49,6 @@ public partial class CefWindow : Window
             WebHost.ConsoleMessage += WebHost_ConsoleMessage;
         }
 
-        _app.TryEnablePerformanceLogging();
-
         WebHost.LoadEnd += WebHost_LoadEnd;
 
         Logger.LogLine(nameof(CefWindow), $"WebHost.Address = \"{_app.Settings.StartingUri.AbsoluteUri}\"");
@@ -65,7 +63,7 @@ public partial class CefWindow : Window
 
         WebHost.ExecuteJavaScript($"const {nameof(WebTesterNativeAPI)} = window.{nameof(WebTesterNativeAPI)};");
 
-        if (e.HttpStatusCode == 200 && !string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
+        if (e.Frame.IsValid && !string.IsNullOrWhiteSpace(_app.Settings.PostLoadJs))
         {
             if (File.Exists(_app.Settings.PostLoadJs))
             {

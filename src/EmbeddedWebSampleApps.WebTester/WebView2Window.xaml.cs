@@ -69,8 +69,6 @@ public partial class WebView2Window : Window
             await helper.Console.EnableAsync();
         }
 
-        _app.TryEnablePerformanceLogging();
-
         WebHost.CoreWebView2.NavigationCompleted += WebHost_CoreWebView2NavigationCompleted;
 
         Logger.LogLine(nameof(WebView2Window), $"WebHost.Source = \"{_app.Settings.StartingUri}\"");

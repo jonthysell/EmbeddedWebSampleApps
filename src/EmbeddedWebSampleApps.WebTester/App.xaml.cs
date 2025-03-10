@@ -42,6 +42,9 @@ public partial class App : Application
     private void Application_Startup(object sender, StartupEventArgs e)
     {
         Logger.LogLine(nameof(App), nameof(Application_Startup));
+
+        TryEnablePerformanceLogging();
+
         Window? window = null;
         if (Settings.WebHost == WebHostType.CEF)
         {
@@ -76,6 +79,8 @@ public partial class App : Application
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
+        TryDisablePerformanceLogging();
+
         _logFile?.Flush();
         _logFile?.Close();
     }
