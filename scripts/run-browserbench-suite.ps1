@@ -1,7 +1,24 @@
 # Run the BrowserBench.org Tests
 param(
-    [int] $Iterations = 10
+    [int] $TargetIterations = 10
 )
+
+
+function Run-Test {
+    param(
+        [string] $TestName,
+        [string] $WebHost,
+        [int] $Iterations
+    )
+
+    Write-Host "Warmup BrowserBench.org $TestName test for $WebHost"
+    & "$RepoRoot\scripts\run-$TestName.ps1" -WebHost $WebHost -LogFile "$RepoRoot\log\$TestName.$WebHost.warmup.log" -Build $False
+    for ($i = 0; $i -lt $Iterations; $i++)
+    {
+        Write-Host "Run BrowserBench.org $TestName test for $WebHost $($i+1)"
+        & "$RepoRoot\scripts\run-$TestName.ps1" -WebHost $WebHost -LogFile "$RepoRoot\log\$TestName.$WebHost.$i.log" -Build $False
+    }
+}
 
 [string] $RepoRoot = Resolve-Path "$PSScriptRoot\.."
 $StartingLocation = Get-Location
@@ -16,42 +33,15 @@ try
 
     Write-Host "Build WebTester"
     & dotnet build -c Release src\EmbeddedWebSampleApps.WebTester
-    
-    for ($i = 0; $i -lt $Iterations; $i++)
-    {
-        Write-Host "Run BrowserBench.org Speedometer test for WV2 $(i+1)"
-        & "$RepoRoot\scripts\run-speedometer.ps1" -WebHost WV2 -LogFile "$RepoRoot\log\speedometer_WV2_$i.log" -Build $False
-    }
 
-    for ($i = 0; $i -lt $Iterations; $i++)
-    {
-        Write-Host "Run BrowserBench.org Speedometer test for CEF $(i+1)"
-        & "$RepoRoot\scripts\run-speedometer.ps1" -WebHost CEF -LogFile "$RepoRoot\log\speedometer_CEF_$i.log" -Build $False
-    }
+    Run-Test -TestName "speedometer" -WebHost "WV2" -Iterations $TargetIterations
+    Run-Test -TestName "speedometer" -WebHost "CEF" -Iterations $TargetIterations
 
-    for ($i = 0; $i -lt $Iterations; $i++)
-    {
-        Write-Host "Run BrowserBench.org JetStream test for WV2 $(i+1)"
-        & "$RepoRoot\scripts\run-jetstream.ps1" -WebHost WV2 -LogFile "$RepoRoot\log\jetstream_WV2_$i.log" -Build $False
-    }
+    Run-Test -TestName "jetstream" -WebHost "WV2" -Iterations $TargetIterations
+    Run-Test -TestName "jetstream" -WebHost "CEF" -Iterations $TargetIterations
 
-    for ($i = 0; $i -lt $Iterations; $i++)
-    {
-        Write-Host "Run BrowserBench.org JetStream test for CEF $(i+1)"
-        & "$RepoRoot\scripts\run-jetstream.ps1" -WebHost CEF -LogFile "$RepoRoot\log\jetstream_CEF_$i.log" -Build $False
-    }
-
-    for ($i = 0; $i -lt $Iterations; $i++)
-    {
-        Write-Host "Run BrowserBench.org MotionMark test for WV2 $(i+1)"
-        & "$RepoRoot\scripts\run-motionmark.ps1" -WebHost WV2 -LogFile "$RepoRoot\log\motionmark_WV2_$i.log" -Build $False
-    }
-
-    for ($i = 0; $i -lt $Iterations; $i++)
-    {
-        Write-Host "Run BrowserBench.org MotionMark test for CEF $(i+1)"
-        & "$RepoRoot\scripts\run-motionmark.ps1" -WebHost CEF -LogFile "$RepoRoot\log\motionmark_CEF_$i.log" -Build $False
-    }
+    Run-Test -TestName "motionmark" -WebHost "WV2" -Iterations $TargetIterations
+    Run-Test -TestName "motionmark" -WebHost "CEF" -Iterations $TargetIterations
 }
 finally
 {
