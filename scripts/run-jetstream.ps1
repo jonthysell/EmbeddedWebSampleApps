@@ -1,4 +1,4 @@
-# Run the BrowserBench.org Speedometer test
+# Run the BrowserBench.org JetStream test
 param(
     [string] $WebHost = "WV2",
     [string] $LogFile = "jetstream.log",

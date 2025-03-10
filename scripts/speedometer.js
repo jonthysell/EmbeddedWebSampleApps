@@ -8,11 +8,11 @@ var checkStart = setInterval(function() {
 
 var checkResult = setInterval(function() {
     if (document.querySelector('#result-number') && document.getElementById("result-number").textContent) {
-        const result = document.getElementById("result-number").textContent;
-        if (result)
+        const score = document.getElementById("result-number").textContent;
+        if (score)
         {
             console.log('Speedometer End');
-            console.log(`Speedometer Result: ${ result }`);
+            console.log(`Speedometer Score: ${ score }`);
             clearInterval(checkResult);
             WebTesterNativeAPI.exitApp();
         }

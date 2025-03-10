@@ -40,6 +40,18 @@ try
         Write-Host "Run BrowserBench.org JetStream test for CEF $(i+1)"
         & "$RepoRoot\scripts\run-jetstream.ps1" -WebHost CEF -LogFile "$RepoRoot\log\jetstream_CEF_$i.log" -Build $False
     }
+
+    for ($i = 0; $i -lt $Iterations; $i++)
+    {
+        Write-Host "Run BrowserBench.org MotionMark test for WV2 $(i+1)"
+        & "$RepoRoot\scripts\run-motionmark.ps1" -WebHost WV2 -LogFile "$RepoRoot\log\motionmark_WV2_$i.log" -Build $False
+    }
+
+    for ($i = 0; $i -lt $Iterations; $i++)
+    {
+        Write-Host "Run BrowserBench.org MotionMark test for CEF $(i+1)"
+        & "$RepoRoot\scripts\run-motionmark.ps1" -WebHost CEF -LogFile "$RepoRoot\log\motionmark_CEF_$i.log" -Build $False
+    }
 }
 finally
 {

@@ -12,7 +12,7 @@ var checkResult = setInterval(function() {
         if (score)
         {
             console.log('JetStream End');
-            console.log(`JetStream Result: ${ score }`);
+            console.log(`JetStream Score: ${ score }`);
             clearInterval(checkResult);
             WebTesterNativeAPI.exitApp();
         }
