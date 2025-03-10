@@ -6,13 +6,14 @@ var checkStart = setInterval(function() {
     }
 }, 1000); // check every 1000ms
 
-var checkResult = setInterval(function() {
+var checkResult = setInterval(async function() {
     if (document.querySelector('#result-number') && document.getElementById("result-number")?.textContent) {
         const score = document.getElementById("result-number")?.textContent;
         if (score)
         {
             console.log('Speedometer End');
             console.log(`Speedometer Score: ${ score }`);
+            await new Promise(r => setTimeout(r, 500));
             clearInterval(checkResult);
             WebTesterNativeAPI.exitApp();
         }

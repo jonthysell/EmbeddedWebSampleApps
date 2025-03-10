@@ -12,11 +12,26 @@ function Run-Test {
     )
 
     Write-Host "Warmup BrowserBench.org $TestName test for $WebHost"
-    & "$RepoRoot\scripts\run-$TestName.ps1" -WebHost $WebHost -LogFile "$RepoRoot\log\$TestName.$WebHost.warmup.log" -Build $False
+    & "$RepoRoot\scripts\run-$TestName.ps1" -WebHost $WebHost -LogFile "$RepoRoot\log\$TestName.$WebHost.warmup.log" -Build $False | Out-Null
     for ($i = 0; $i -lt $Iterations; $i++)
     {
-        Write-Host "Run BrowserBench.org $TestName test for $WebHost $($i+1)"
-        & "$RepoRoot\scripts\run-$TestName.ps1" -WebHost $WebHost -LogFile "$RepoRoot\log\$TestName.$WebHost.$i.log" -Build $False
+        Write-Host "Run BrowserBench.org $TestName test for $WebHost #$($i+1)"
+        & "$RepoRoot\scripts\run-$TestName.ps1" -WebHost $WebHost -LogFile "$RepoRoot\log\$TestName.$WebHost.$i.log" -Build $False | Out-Null
+        $cpu = @()
+        $ram = @()
+        $score = '';
+        Get-Content "$RepoRoot\log\$TestName.$WebHost.$i.log" | ForEach-Object {
+            if ($_ -match "Score: (\d+\.\d+)") {
+                $score = [double] $matches[1]
+            } elseif  ($_ -match "CPU: (\d+\.\d+)%, RAM: (\d+\.\d+) MB") {
+                $cpu += [double] $matches[1]
+                $ram += [double] $matches[2]
+            }
+        }
+        $maxCpu = ($cpu | Measure-Object -Maximum).Maximum
+        $maxRam = ($ram | Measure-Object -Maximum).Maximum
+        Write-Host "$TestName $WebHost #$i: CPU: $maxCpu%, RAM: $maxRam MB, Score: $score"
+        "$TestName $WebHost #$i`t$maxCpu`t$maxRam`t$score" | Add-Content "$RepoRoot\log\total.log"
     }
 }
 
@@ -32,7 +47,9 @@ try
     }
 
     Write-Host "Build WebTester"
-    & dotnet build -c Release src\EmbeddedWebSampleApps.WebTester
+    & dotnet build -c Release src\EmbeddedWebSampleApps.WebTester | Out-Null
+
+    "Test`tMax CPU`tMax RAM`tScore" | Set-Content "$RepoRoot\log\total.log"
 
     Run-Test -TestName "speedometer" -WebHost "WV2" -Iterations $TargetIterations
     Run-Test -TestName "speedometer" -WebHost "CEF" -Iterations $TargetIterations
