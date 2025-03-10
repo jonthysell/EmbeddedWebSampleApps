@@ -30,8 +30,8 @@ function Run-Test {
         }
         $maxCpu = ($cpu | Measure-Object -Maximum).Maximum
         $maxRam = ($ram | Measure-Object -Maximum).Maximum
-        Write-Host "$TestName $WebHost #$i: CPU: $maxCpu%, RAM: $maxRam MB, Score: $score"
-        "$TestName $WebHost #$i`t$maxCpu`t$maxRam`t$score" | Add-Content "$RepoRoot\log\total.log"
+        Write-Host "$TestName $WebHost [$i]: CPU: $maxCpu%, RAM: $maxRam MB, Score: $score"
+        "$TestName $WebHost [$i]`t$maxCpu`t$maxRam`t$score" | Add-Content "$RepoRoot\log\total.log"
     }
 }
 
