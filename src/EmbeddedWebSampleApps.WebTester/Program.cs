@@ -67,6 +67,8 @@ internal static class Program
                     case "-?":
                     case "--help":
                         return false;
+                    case "":
+                        break;
                     default:
                         throw new Exception($"Unknown argument \"{args[i]}\".");
                 }
