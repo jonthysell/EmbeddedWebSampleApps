@@ -20,18 +20,25 @@ function Run-Test {
         $cpu = @()
         $ram = @()
         $score = '';
+        $started = $false
         Get-Content "$RepoRoot\log\$TestName.$WebHost.$i.log" | ForEach-Object {
-            if ($_ -match "Score: (\d+\.\d+)") {
+            if ($_ -match " Start$") {
+                $started = $true
+            } elseif ($_ -match " End$") {
+                $started = $false
+            } elseif ($_ -match "Score: (\d+\.\d+)") {
                 $score = [double] $matches[1]
-            } elseif  ($_ -match "CPU: (\d+\.\d+)%, RAM: (\d+\.\d+) MB") {
+            } elseif  ($started -and ($_ -match "CPU: (\d+\.\d+)%, RAM: (\d+\.\d+) MB")) {
                 $cpu += [double] $matches[1]
                 $ram += [double] $matches[2]
             }
         }
+        $avgCpu = ($cpu | Measure-Object -Average).Average 
         $maxCpu = ($cpu | Measure-Object -Maximum).Maximum
+        $avgRam = ($ram | Measure-Object -Average).Average
         $maxRam = ($ram | Measure-Object -Maximum).Maximum
-        Write-Host "$TestName $WebHost [$i]: CPU: $maxCpu%, RAM: $maxRam MB, Score: $score"
-        "$TestName $WebHost [$i]`t$maxCpu`t$maxRam`t$score" | Add-Content "$RepoRoot\log\total.log"
+        Write-Host "$TestName $WebHost [$i]: CPU: $avgCpu%, RAM: $avgRam MB, Score: $score"
+        "$TestName $WebHost [$i]`t$avgCpu`t$maxCpu`t$avgRam`t$maxRam`t$score" | Add-Content "$RepoRoot\log\total.log"
     }
 }
 
@@ -49,7 +56,7 @@ try
     Write-Host "Build WebTester"
     & dotnet build -c Release src\EmbeddedWebSampleApps.WebTester | Out-Null
 
-    "Test`tMax CPU`tMax RAM`tScore" | Set-Content "$RepoRoot\log\total.log"
+    "Test`tAvg CPU`tMax CPU`tAvg RAM`tMax RAM`tScore" | Set-Content "$RepoRoot\log\total.log"
 
     Run-Test -TestName "speedometer" -WebHost "WV2" -Iterations $TargetIterations
     Run-Test -TestName "speedometer" -WebHost "CEF" -Iterations $TargetIterations
