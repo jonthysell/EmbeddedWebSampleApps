@@ -8,6 +8,9 @@ Sample apps to test the various ways web content is embedded in native desktop a
 
 A .NET WPF app that can be called from the command line to load web content via either a [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) OR the [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef/src), to test their web apps, with a particular focus on gathering native performance metrics. It even even allows the caller to inject their own JavaScript (typically to drive the UI via the DOM).
 
+### Setup
+1. Make sure you have the [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) installed.
+
 ### Usage
 1. `dotnet run -c Release --project src\EmbeddedWebSampleApps.WebTester`
 
@@ -28,15 +31,25 @@ Options:
 -?, --help            Display this help
 ```
 
+### BrowserBench.org Test Suite
+For an end-to-end example of using WebTester to automate running the full suite of [BrowserBench](https://browserbench.org/) benchmarks and aggregating results across multiple iterations, see the `scripts\run-browserbench-suite.ps1` script.
+
+> **Note:** The script only works in [PowerShell 7](https://learn.microsoft.com/en-us/powershell/), not Windows PowerShell.
+
+
 ## CefTester
 
 ![CEF Tester Screenshot](./screenshots/CefTester.png)
 
 Simple .NET WPF app that loads [BrowserBench](https://browserbench.org/) via the [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef/src).
 
+### Setup
+1. Make sure you have the [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) installed.
+
 ### Usage
 1. `dotnet run -c Release --project src\EmbeddedWebSampleApps.CefTester`
-2. Click "Start"
+2. Select a benchmark
+3. Click "Start"
 
 ## WebView2 Tester
 
@@ -44,9 +57,13 @@ Simple .NET WPF app that loads [BrowserBench](https://browserbench.org/) via the
 
 Simple .NET WPF app that loads [BrowserBench](https://browserbench.org/) via a [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
 
+### Setup
+1. Make sure you have the [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) installed.
+
 ### Usage
 1. `dotnet run -c Release --project src\EmbeddedWebSampleApps.WebView2Tester`
-2. Click "Start"
+2. Select a benchmark
+3. Click "Start"
 
 ## History
 
