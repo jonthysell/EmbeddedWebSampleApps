@@ -31,6 +31,7 @@ See the help with `dotnet run -c Release --project src\EmbeddedWebSampleApps.Web
 EmbeddedWebSampleApps.WebTester.exe [options]
 Options:
 
+--clear-cache         Clear the web browser cache before loading (default: False)
 --log-file [file]     Log output to the given file (default: none)
 --log-performance     Enable performance logging (default: False)
 --log-web-console     Enable web console logging (default: False)

@@ -16,6 +16,7 @@ public class AppSettings
     public WebHostType WebHost = WebHostType.WV2;
     public Uri StartingUri = new Uri("https://microsoft.com/");
     public Size WindowSize = new Size(640, 480);
+    public bool ClearCache = false;
     public bool LogWebConsole = false;
     public bool LogPerformance = false;
     public string PostLoadJs = "";

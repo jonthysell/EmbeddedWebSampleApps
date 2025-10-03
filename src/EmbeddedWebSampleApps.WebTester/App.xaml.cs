@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+
 using System.Windows;
 
 using Xilium.CefGlue.Common;
 using Xilium.CefGlue;
+
 using EmbeddedWebSampleApps.Common;
 
 namespace EmbeddedWebSampleApps.WebTester;
@@ -48,13 +49,30 @@ public partial class App : Application
         Window? window = null;
         if (Settings.WebHost == WebHostType.CEF)
         {
-            // Set CefGlue's cache to a folder next to the exe if possible, otherwise put in temp folder
-            var cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) ?? Path.GetTempPath(), $"{AppInfo.Name}.exe.CefGlue");
+            // Get the raw assembly path (visible in regular builds but hidden in self-contained publishes)
+            var rawAssemblyPath = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().Where(pm => Path.GetFileName(pm.FileName) == "Xilium.CefGlue.dll").Select(pm => Path.GetDirectoryName(pm.FileName)).FirstOrDefault();
+
+            // Set CefGlue's cache in temp folder
+            var cachePath = Path.Combine(Path.GetTempPath(), $"{AppInfo.Name}.exe.CefGlue");
+
+            Logger.LogLine(nameof(App), $"CefRuntimeLoader CachePath: \"{cachePath}\"");
+
+            if (Settings.ClearCache && Directory.Exists(cachePath))
+            {
+                Logger.LogLine(nameof(App), nameof(Settings.ClearCache));
+                Directory.Delete(cachePath, true);
+            }
+
+            var localesPath = rawAssemblyPath is not null ? Path.Combine(rawAssemblyPath, "runtimes\\win-x64\\native\\locales") : "";
+
+            Logger.LogLine(nameof(App), $"CefRuntimeLoader LocalesDirPath: \"{localesPath}\"");
 
             var settings = new CefSettings()
             {
                 RootCachePath = cachePath,
                 CachePath = cachePath,
+                LocalesDirPath = localesPath,
+                LogFile = Path.Combine(cachePath, "debug.log"),
             };
 
             Logger.LogLine(nameof(App), "CefRuntimeLoader.Initialize()");

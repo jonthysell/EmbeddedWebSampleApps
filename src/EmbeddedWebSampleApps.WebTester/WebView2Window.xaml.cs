@@ -1,7 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using EmbeddedWebSampleApps.Common;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Core.DevToolsProtocolExtension;
 using System.IO;
+using System.Security.Policy;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,12 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.Core.DevToolsProtocolExtension;
-
-using EmbeddedWebSampleApps.Common;
 
 namespace EmbeddedWebSampleApps.WebTester;
 
@@ -38,7 +36,20 @@ public partial class WebView2Window : Window
     {
         Logger.LogLine(nameof(WebView2Window), nameof(WebHost_Loaded));
 
-        await WebHost.EnsureCoreWebView2Async();
+        // Set CefGlue's cache in temp folder
+        var cachePath = Path.Combine(Path.GetTempPath(), $"{AppInfo.Name}.exe.WebView2");
+
+        Logger.LogLine(nameof(WebView2Window), $"CoreWebView2Environment CachePath: \"{cachePath}\"");
+
+        if (_app.Settings.ClearCache && Directory.Exists(cachePath))
+        {
+            Logger.LogLine(nameof(WebView2Window), nameof(_app.Settings.ClearCache));
+            Directory.Delete(cachePath, true);
+        }
+
+        var webView2Environment = await CoreWebView2Environment.CreateAsync(null, cachePath);
+
+        await WebHost.EnsureCoreWebView2Async(webView2Environment);
     }
 
     private void WebHost_ConsoleMessageAdded(object? sender, Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Console.MessageAddedEventArgs e)
@@ -60,6 +71,12 @@ public partial class WebView2Window : Window
     private async void WebHost_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
     {
         Logger.LogLine(nameof(WebView2Window), nameof(WebHost_CoreWebView2InitializationCompleted));
+
+        if (_app.Settings.ClearCache)
+        {
+            Logger.LogLine(nameof(WebView2Window), nameof(CoreWebView2Profile.ClearBrowsingDataAsync));
+            await WebHost.CoreWebView2.Profile.ClearBrowsingDataAsync();
+        }
 
         if (_app.Settings.LogWebConsole)
         {

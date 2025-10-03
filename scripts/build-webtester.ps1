@@ -21,7 +21,7 @@ try
 {
     New-Item -Path "$OutputRoot\$TargetOutputDirectory" -ItemType "directory" | Out-Null
     dotnet msbuild -target:Publish -p:RuntimeIdentifiers=win-x64 -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:SelfContained=true -restore -p:Configuration=Release -p:PublishDir="$RepoRoot\$OutputRoot\$TargetOutputDirectory" "$RepoRoot\src\EmbeddedWebSampleApps.WebTester\EmbeddedWebSampleApps.WebTester.csproj"
-    # Move-Item "$RepoRoot\$OutputRoot\$TargetOutputDirectory\EmbeddedWebSampleApps.WebTester.exe" "$RepoRoot\$OutputRoot\$TargetOutputDirectory\WebTester.exe"
+    Move-Item "$RepoRoot\$OutputRoot\$TargetOutputDirectory\EmbeddedWebSampleApps.WebTester.exe" "$RepoRoot\$OutputRoot\$TargetOutputDirectory\WebTester.exe"
     if (!$?) {
     	throw 'Build failed!'
     }

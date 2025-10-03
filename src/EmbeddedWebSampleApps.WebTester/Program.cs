@@ -43,6 +43,9 @@ internal static class Program
             {
                 switch (args[i].ToLower())
                 {
+                    case "--clear-cache":
+                        settings.ClearCache = true;
+                        break;
                     case "--log-file":
                         settings.LogFile = ++i < args.Length ? args[i] : throw new Exception($"Missing argument after {args[i - 1].ToLower()}.");
                         break;
@@ -89,6 +92,7 @@ internal static class Program
         Console.WriteLine($"{AppInfo.Name}.exe [options]");
         Console.WriteLine("Options:");
         Console.WriteLine();
+        Console.WriteLine($"--clear-cache         Clear the web browser cache before loading (default: {defaultSettings.ClearCache})");
         Console.WriteLine($"--log-file [file]     Log output to the given file (default: none)");
         Console.WriteLine($"--log-performance     Enable performance logging (default: {defaultSettings.LogPerformance})");
         Console.WriteLine($"--log-web-console     Enable web console logging (default: {defaultSettings.LogWebConsole})");
