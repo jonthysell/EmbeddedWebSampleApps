@@ -11,6 +11,16 @@ A .NET WPF app that can be called from the command line to load web content via 
 ### Setup
 1. Make sure you have the [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) installed.
 
+### Build
+
+Run the following script to build the self-contained tool:
+
+```ps
+scripts\build.ps1
+```
+
+It will be available in the `bld\` folder.
+
 ### Usage
 1. `dotnet run -c Release --project src\EmbeddedWebSampleApps.WebTester`
 

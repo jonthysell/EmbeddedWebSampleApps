@@ -1,7 +1,19 @@
 ﻿<Project>
     <PropertyGroup>
+        <Product>EmbeddedWebSampleApps</Product>
+        <Company>Microsoft</Company>
+        <Authors>Microsoft</Authors>
+        <Copyright>Copyright © Microsoft Corporation</Copyright>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <RepositoryUrl>https://github.com/jonthysell/EmbeddedWebSampleApps</RepositoryUrl>
         <TargetFramework>net9.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Version>0.9.0</Version>
+        <AssemblyVersion>$(Version).$([System.DateTime]::UtcNow.ToString("yy"))$([System.DateTime]::UtcNow.DayOfYear.ToString("00"))</AssemblyVersion>
+        <FileVersion>$(AssemblyVersion)</FileVersion>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+        <DebugType>embedded</DebugType>
+        <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     </PropertyGroup>
 </Project>
