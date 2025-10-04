@@ -4,7 +4,7 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CefGlue.WPF" Version="120.6099.210" />
+        <PackageReference Include="CefGlue.WPF" Version="120.6099.211" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\EmbeddedWebSampleApps.Common\EmbeddedWebSampleApps.Common.csproj" />

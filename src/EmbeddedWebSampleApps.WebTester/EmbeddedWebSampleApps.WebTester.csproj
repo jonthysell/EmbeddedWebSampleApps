@@ -6,8 +6,8 @@
         <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CefGlue.WPF" Version="120.6099.210" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+        <PackageReference Include="CefGlue.WPF" Version="120.6099.211" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
         <PackageReference Include="Microsoft.Web.WebView2.DevToolsProtocolExtension" Version="1.0.2901" />
     </ItemGroup>
     <ItemGroup>
